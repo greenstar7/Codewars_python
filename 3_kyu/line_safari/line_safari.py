@@ -1,14 +1,16 @@
-def show_grid(grid):
-    ''' Function to show 2d matrix representing the grid for our line'''
-    for line in grid:
-        print(line)
+''' Hrynevych Artemii
+My solution for the Codewars "Line Safari" kata
+https://www.codewars.com/kata/line-safari-is-that-a-line/python'''
 
 def line(grid):
     ''' Function to check if the grid has a valid line'''
     start_points = get_start_points(grid)
+    # just finding dimensions of the array to calculate it only once
+    rows = len(grid)
+    cols = len(grid[0])
     for point in start_points:
-        print(f'checking {point}')
-        if check_line(grid, point):
+#        print(f'checking {point}')
+        if check_line(grid, point, rows, cols):
             return True
     return False
 
@@ -19,41 +21,42 @@ def get_start_points(grid, start='X'):
     # returning the list of positions of start points
     return [(r,c) for r in rows for c in cols if grid[r][c] == start]
 
-def check_line(grid, start):
+def check_line(grid, start, rows, cols):
     ''' Function to check whether there is a line from this starting point
     to another one'''
-    prev = None
     curr = start
-    path = [ [' ' for char in line] for line in grid]
-    path[curr[0]][curr[1]] = grid[curr[0]][curr[1]]
+    # creating new array for the path we walked
+    path = [ [char for char in line] for line in grid]
+    # and writing cells we walked through to it
+    path[curr[0]][curr[1]] = ' '
     # find next step
-    next = get_first_next(grid, curr)
+    next = get_first_next(grid, curr, rows, cols)
     # while next step is valid
     while next is not None:
-        prev = curr
+        dir_vec = (next[0]-curr[0], next[1]-curr[1])
+        path[curr[0]][curr[1]] = ' '
         curr = next
-        path[curr[0]][curr[1]] = grid[curr[0]][curr[1]]
         # until you find the exit
+#        print(f'Current: {grid[curr[0]][curr[1]]}')
         if grid[curr[0]][curr[1]] == 'X':
-            path = [''.join(line) for line in path]
-            if grid == path:
+            path[curr[0]][curr[1]] = ' '
+            if check_path_is_empty(path):
                 return True
             else:
                 return False
         else:
             # continue to go further
-            next = get_next(grid, prev, curr)
-        print(prev, curr, next)
+            next = get_next(path, dir_vec, curr, rows, cols)
+#        print(dir_vec, curr, next)
     # if next step is not valid
+    # and we didn't reach the end before
     return False
         
-def get_first_next(grid, curr):
+def get_first_next(grid, curr, rows, cols):
     ''' Function to find the first neighbour of the start cell
     to continue goint through the line'''
-    rows = len(grid)
-    cols = len(grid[0])
     first_next = None
-    print(f'getting first heighbour')
+#    print(f'getting first heighbour')
     # checking the left neighbour
     if 0 <= curr[1]-1:
         temp = grid[curr[0]][curr[1]-1]
@@ -85,117 +88,65 @@ def get_first_next(grid, curr):
                 first_next = (curr[0]+1,curr[1])
     return first_next
         
-def get_next(grid, prev, curr):
+def get_next(grid, dir_vec, curr, rows, cols):
     ''' Function to get the position of the next cell
     or None if there is no right place to go'''
-    print(f'getting next')
-    rows = len(grid)
-    cols = len(grid[0])
-    drctn = (curr[0]-prev[0], curr[1]-prev[1])
+#    print(f'getting next')
     curr_type = grid[curr[0]][curr[1]]
-    if curr_type in '-|X':
-        try:
-            next = (curr[0]+drctn[0], curr[1]+drctn[1])
-            next_type = grid[next[0]][next[1]]
-        except IndexError:
-            return None
-        else:
-            if curr_type == next_type or next_type in '+X':
-                return next
-            else:
-                return None
+    
+    # next pos in direction of movement
+    in_dir_pos = (curr[0] + dir_vec[0], curr[1] + dir_vec[1])
+    # if next position in direction of mevement is in the list
+    # and we can get it's value
+    if 0 <= in_dir_pos[0] < rows and 0 <= in_dir_pos[1] < cols:
+        in_dir_type = grid[in_dir_pos[0]][in_dir_pos[1]]
+    else:
+        in_dir_type = None
+    # if the cell we are currently on is a '-' or '|'
+    # the next one must be '+' or the same type to be valid
+    if curr_type in '-|':
+        if in_dir_type in ''.join(('+', 'X',curr_type)):
+            return in_dir_pos
+    # otherwise it must be a corner
     elif curr_type == '+':
-        # DOESNT WORK PROPERLY
-        # TODO
-        in_direction = (curr[0]+drctn[0], curr[1]+drctn[1])
-        PERPENDICULAR = {(1, 0): ' -', (-1, 0): ' -', (0, 1): ' |', (0, -1): ' |'}
-        IN_DIR_TYPE = {(1, 0): '|', (-1, 0): '|', (0, 1): '-', (0, -1): '-'}
-        # if there is something in direction of movement
-        if 0 <= in_direction[0] < rows and 0 <= in_direction[1] < cols:
-            in_dir_type = grid[in_direction[0]][in_direction[1]]
-            if in_dir_type in IN_DIR_TYPE[drctn[0], drctn[1]]:
-                # that means it's not a corner
+#        print('PLUS')
+        # '+' might be a corner if the next cell is perpendicular
+        # for example '|' is we are going right/left
+        # or next cell is none, whitespace or '+'
+        perp = perpendicular[dir_vec]
+#        print(f'{in_dir_type}')
+        if in_dir_type in (None, '+', ' ', perp):
+            # if this '+' may be a corner let's check right and left
+            # for this '+' to be a corner it must have right or left neighbor
+            # and only one neighbor
+            # otherwise (2 neighbors or no neighbor) it's not a corner
+            # neighbors must be perpendicular to direction vector or '+'
+            right = (curr[0] - dir_vec[1], curr[1] - dir_vec[0])
+            left = (curr[0] + dir_vec[1], curr[1] + dir_vec[0])
+            if 0 <= right[0] < rows and 0 <= right[1] < cols:
+                right_type = grid[right[0]][right[1]]
+                if right_type not in ('+', perp, 'X'):
+                    right_type = None 
+            else:
+                right_type = None
+            if 0 <= left[0] < rows and 0 <= left[1] < cols:
+                left_type = grid[left[0]][left[1]]
+                if left_type not in ('+', perp, 'X'):
+                    left_type = None 
+            else:
+                left_type = None
+#            print(f'left{left, left_type} right{right, right_type}')
+            if left_type and right_type:
                 return None
-        right_side = (curr[0]-drctn[1], curr[1]-drctn[0])
-        if 0 <= right_side[0] < rows and 0 <= right_side[1] < cols:
-            right_side_type = grid[right_side[0]][right_side[1]]
-            #if right_side_type == IN_DIR_TYPE[(-drctn[1],-drctn[0])] or right_side_type == '+':   
-            #    return right_side
-            if right_side_type in PERPENDICULAR[(-drctn[1],-drctn[0])]:
-                right_side = None
-            print(f'right side {right_side_type}')
-        else:
-            right_side = None
-        left_side = (curr[0]+drctn[1], curr[1]+drctn[0])
-        if 0 <= left_side[0] < rows and 0 <= left_side[1] < cols:
-            left_side_type = grid[left_side[0]][left_side[1]]
-            #if left_side_type == IN_DIR_TYPE[(drctn[1],drctn[0])] or left_side_type == '+':
-            #    return left_side
-            if left_side_type in PERPENDICULAR[(drctn[1],drctn[0])]:
-                left_side = None
-            print(f'left side {left_side_type}')
-        else:
-            left_side = None
-        if right_side and left_side:
-            return None
-        else:
-            return right_side or left_side
-    return None
-
-# my little test
-if __name__=='__main__':
-    grids = [    ['    ',
-                  'X   ',
-                  'X   '
-                  '    '],
-                 [' X  ',
-                  ' X  '
-                  '    '],
-                 ["           ",
-                  "X---------X",
-                  "           ",
-                  "           "],
-                 ["     ",
-                  "  X  ",
-                  "  |  ",
-                  "  |  ",
-                  "  X  "],
-                 ['+-----+',  
-                  '|     |',
-                  'X     X',
-                  '|     |',
-                  '+-----+'],
-                 [ '    +----+  ',
-                   '    |+--+|  ',
-                   '    ||X+||  ',
-                   '    |+-+||  ',
-                   '    +---+|  ',
-                   'X--------+  '],
-                 ["                    ",
-                  "     +--------+     ",
-                  "  X--+        +--+  ",
-                  "                 |  ",
-                  "                 X  ",
-                  "                    "],
-                 ["                     ",
-                  "    +-------------+  ",
-                  "    |             |  ",
-                  " X--+      X------+  ",
-                  "                     "],
-                 ["                      ",
-                  "   +-------+          ",
-                  "   |      +++---+     ",
-                  "X--+      +-+   X     "],
-                 ["      +------+",
-                  "      |      |",
-                  "X-----+------+",
-                  "      |       ",
-                  "      X       "],
-                ['   X     X   ',
-                 '   ++++  +-+ ',
-                 '    +++--+ | ',
-                 '         +-+ ']]
-    for grid in grids:
-        show_grid(grid) # just want to see the grid before we start
-        print(get_start_points(grid))
-        print(f'{"-"*86}\nRESULT{"-"*80}>>>>>> {line(grid)}')
+            elif left_type:
+                return left
+            elif right_type:
+                return right
+    return None 
+    
+def check_path_is_empty(path):
+    for line in path:
+        for char in line:
+            if char != ' ':
+                return False
+    return True
