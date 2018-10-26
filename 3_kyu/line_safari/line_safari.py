@@ -9,7 +9,6 @@ def line(grid):
     rows = len(grid)
     cols = len(grid[0])
     for point in start_points:
-#        print(f'checking {point}')
         if check_line(grid, point, rows, cols):
             return True
     return False
@@ -37,7 +36,6 @@ def check_line(grid, start, rows, cols):
         path[curr[0]][curr[1]] = ' '
         curr = next
         # until you find the exit
-#        print(f'Current: {grid[curr[0]][curr[1]]}')
         if grid[curr[0]][curr[1]] == 'X':
             path[curr[0]][curr[1]] = ' '
             if check_path_is_empty(path):
@@ -56,7 +54,6 @@ def get_first_next(grid, curr, rows, cols):
     ''' Function to find the first neighbour of the start cell
     to continue goint through the line'''
     first_next = None
-#    print(f'getting first heighbour')
     # checking the left neighbour
     if 0 <= curr[1]-1:
         temp = grid[curr[0]][curr[1]-1]
@@ -91,7 +88,6 @@ def get_first_next(grid, curr, rows, cols):
 def get_next(grid, dir_vec, curr, rows, cols):
     ''' Function to get the position of the next cell
     or None if there is no right place to go'''
-#    print(f'getting next')
     curr_type = grid[curr[0]][curr[1]]
     
     # next pos in direction of movement
@@ -109,12 +105,10 @@ def get_next(grid, dir_vec, curr, rows, cols):
             return in_dir_pos
     # otherwise it must be a corner
     elif curr_type == '+':
-#        print('PLUS')
         # '+' might be a corner if the next cell is perpendicular
         # for example '|' is we are going right/left
         # or next cell is none, whitespace or '+'
         perp = perpendicular[dir_vec]
-#        print(f'{in_dir_type}')
         if in_dir_type in (None, '+', ' ', perp):
             # if this '+' may be a corner let's check right and left
             # for this '+' to be a corner it must have right or left neighbor
@@ -135,7 +129,6 @@ def get_next(grid, dir_vec, curr, rows, cols):
                     left_type = None 
             else:
                 left_type = None
-#            print(f'left{left, left_type} right{right, right_type}')
             if left_type and right_type:
                 return None
             elif left_type:
