@@ -1,6 +1,6 @@
 # Codewars_python
-This is repo for my solutions for [Codewars](codewars.com "Codewars") katas in Python3.
-My [profile](https://www.codewars.com/users/greenstar7 "Me") on [Codewars](codewars.com "Codewars").
+This is repo for my solutions for [Codewars](https://www.codewars.com "Codewars page") katas in Python3.
+My [profile](https://www.codewars.com/users/greenstar7 "Me") on [Codewars](https://www.codewars.com "Codewars page").
 All my solutions are published under MIT license.
 You can use it absolutely free and modify as you want.
 ## Solutions sorted by kyu's
