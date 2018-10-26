@@ -6,10 +6,10 @@ def show_grid(grid):
 def line(grid):
     ''' Function to check if the grid has a valid line'''
     start_points = get_start_points(grid)
-    results = []
     for point in start_points:
-        results.append(check_line(grid, start=point))
-    return any(results)
+        if check_line(grid, start=point):
+            return True
+    return False
 
 def get_start_points(grid, start='X'):
     ''' Function to get the coordinates of the start points'''
@@ -32,7 +32,6 @@ def check_line(grid, start):
         prev = curr
         curr = next
         path[curr[0]][curr[1]] = grid[curr[0]][curr[1]]
-        show_grid(grid)
         # until you find the exit
         if grid[curr[0]][curr[1]] == 'X':
             path = [''.join(line) for line in path]
@@ -43,7 +42,6 @@ def check_line(grid, start):
         else:
             # continue to go further
             next = get_next(grid, prev, curr)
-            print(prev, curr, next)
     # if next step is not valid
     return False
         
@@ -53,7 +51,7 @@ def get_first_next(grid, curr):
     rows = len(grid)
     cols = len(grid[0])
     # checking the left neighbour
-    if curr[1]-1 >= 0 and grid[curr[0]][curr[1]-1] in '-+X':
+    if 0 <= curr[1]-1 and grid[curr[0]][curr[1]-1] in '-+X':
         return (curr[0],curr[1]-1)
     # checking the right neighbour
     elif curr[1]+1 < cols and grid[curr[0]][curr[1]+1] in '-+X':
@@ -72,12 +70,9 @@ def get_next(grid, prev, curr):
     ''' Function to get the position of the next cell
     or None if there is no right place to go'''
 
-    print(f'prev: {prev} curr {curr}')
-    # lambda function to determine 'vector of direction'
     rows = len(grid)
     cols = len(grid[0])
     drctn = (curr[0]-prev[0], curr[1]-prev[1])
-    print(f'direction {drctn}')
     curr_type = grid[curr[0]][curr[1]]
     if curr_type in '-|X':
         try:
@@ -91,31 +86,23 @@ def get_next(grid, prev, curr):
             else:
                 return None
     elif curr_type == '+':
-        print(f'FOUND PLUS +')
         in_direction = (curr[0]+drctn[0], curr[1]+drctn[1])
         PERPENDICULAR = {(1, 0): '-', (-1, 0): '-', (0, 1): '|', (0, -1): '|'}
         IN_DIR_TYPE = {(1, 0): '|+X', (-1, 0): '|+X', (0, 1): '-+X', (0, -1): '-+X'}
         # if there is something in direction of movement
         if 0 <= in_direction[0] < rows and 0 <= in_direction[1] < cols:
             in_dir_type = grid[in_direction[0]][in_direction[1]]
-            print(f'in_dir_type: {in_dir_type}')
-            # and if this something is not perpendicular and not a cross or whitespace
-            if in_dir_type not in ' +' and in_dir_type != PERPENDICULAR[drctn]:
                 # that means it's not a corner
-                print('Not a corner')
-                return None
         right_side = (curr[0]-drctn[1], curr[1]-drctn[0])
-        left_side = (curr[0]+drctn[1], curr[1]+drctn[0])
         if 0 <= right_side[0] < rows and 0 <= right_side[1] < cols:
             right_side_type = grid[right_side[0]][right_side[1]]
-            print(f'right side: {right_side_type}')
-            if right_side_type in IN_DIR_TYPE[(+drctn[1],-drctn[0])]:
+            if right_side_type in IN_DIR_TYPE[(-drctn[1],-drctn[0])]:   
                 return right_side
             elif right_side_type != ' ' and right_side_type not in PERPENDICULAR[(-drctn[1],-drctn[0])]:
                 return None
+        left_side = (curr[0]+drctn[1], curr[1]+drctn[0])
         if 0 <= left_side[0] < rows and 0 <= left_side[1] < cols:
             left_side_type = grid[left_side[0]][left_side[1]]
-            print(f'left side: {left_side, left_side_type}')
             if left_side_type in IN_DIR_TYPE[(drctn[1],drctn[0])]:
                 return left_side
             elif left_side_type != ' ' and left_side_type not in PERPENDICULAR[(drctn[1],drctn[0])]:
@@ -133,8 +120,7 @@ if __name__=='__main__':
                   'X   ',
                   'X   '
                   '    '],
-                 ['    ',
-                  'X   ',
+                 [' X  ',
                   ' X  '
                   '    '],
                  ["           ",
