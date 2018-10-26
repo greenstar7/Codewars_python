@@ -2,6 +2,8 @@
 My solution for the Codewars "Line Safari" kata
 https://www.codewars.com/kata/line-safari-is-that-a-line/python'''
 
+perpendicular = {(1, 0): '-', (-1, 0): '-', (0, 1): '|', (0, -1): '|'}
+
 def line(grid):
     ''' Function to check if the grid has a valid line'''
     start_points = get_start_points(grid)
