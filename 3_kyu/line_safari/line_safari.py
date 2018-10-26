@@ -45,7 +45,6 @@ def check_line(grid, start, rows, cols):
         else:
             # continue to go further
             next = get_next(path, dir_vec, curr, rows, cols)
-#        print(dir_vec, curr, next)
     # if next step is not valid
     # and we didn't reach the end before
     return False
