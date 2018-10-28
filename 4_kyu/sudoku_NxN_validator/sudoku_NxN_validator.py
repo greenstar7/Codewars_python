@@ -19,9 +19,7 @@ class Sudoku(object):
         self.__alphabet = set(range(1, self.__N+1))
         
     def is_valid(self):
-        """Method to check the solved sudoku.
-        We assume that grid contains only numbers from 1 to N (included).
-        That assumtion allows us to validate the grid by summing."""
+        """Method to check the solved sudoku."""
         if not self.check_dimensions():
             return False
         if not self.check_type():
