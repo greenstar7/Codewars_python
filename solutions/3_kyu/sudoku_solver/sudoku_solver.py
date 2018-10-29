@@ -3,6 +3,7 @@ My solution for the Codewars "Sudoku Solver" kata
 https://www.codewars.com/kata/5296bc77afba8baa690002d7
 """
 
+# sudoku NxN grid size
 N = 9 # now only suitable for 9x9 sudoku
 
 def sudoku(puzzle):
@@ -28,7 +29,7 @@ def sudoku(puzzle):
         puzzle[curr_pos[0]][curr_pos[1]] +=1
         # if nums from 1 to 9 are not valid
         # that means we need to change previous cell
-        if puzzle[curr_pos[0]][curr_pos[1]] > 9:
+        if puzzle[curr_pos[0]][curr_pos[1]] > N:
             # zeroing the current cell
             puzzle[curr_pos[0]][curr_pos[1]] = 0
             # moving to the previous one
@@ -68,14 +69,15 @@ def is_valid(puzzle, pos):
     # XXX
     # ***
     # ***
-    upper_bound = 3*(pos[0]//3)
+    n = int(N**0.5)
+    upper_bound = n*(pos[0]//n)
     # 3*(pos[1]//3) -- left bound of the square
     # X**
     # X**
     # X**
-    left_bound = 3*(pos[1]//3)
-    for row in range(upper_bound, upper_bound+3):
-        for col in range(left_bound, left_bound+3):
+    left_bound = n*(pos[1]//n)
+    for row in range(upper_bound, upper_bound+n):
+        for col in range(left_bound, left_bound+n):
             if puzzle[row][col] == pos_number:
                 if (row, col) != pos:
                     return False
