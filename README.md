@@ -4,7 +4,7 @@ My [profile](https://www.codewars.com/users/greenstar7 "Me") on [Codewars](https
 All my solutions are published under MIT license.
 You can use it absolutely free and modify as you want.
 
-![Codewars](https://www.codewars.com/users/greenstar7/badges/large)](https://www.codewars.com/users/greenstar7 "Me")
+![Codewars](https://www.codewars.com/users/greenstar7/badges/large)(https://www.codewars.com/users/greenstar7 "Me")
 ## Solutions sorted by kyu's
 [3 kyu](./solutions/3_kyu/)
 
