@@ -20,5 +20,5 @@ def get_missing_ingredients(recipe, added):
     # the above "ceil" can be substituted with:
     # n_cakes = int(n_cakes+1)
     result = {key: recipe[key]*n_cakes-added.get(key, 0) for key in recipe}
-    # retur
+    # return only pairs with non zero value
     return {key:value for key, value in result.items() if value != 0}
