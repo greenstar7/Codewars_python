@@ -12,10 +12,11 @@ class Sudoku(object):
         and computing N -- side size of the grid
         
         Arguments:
-        grid -- NxN sudoku grid
+        grid -- NxN sudoku grid, sqrt(N) must be integer
         """
         self.__grid = grid
         self.__N = len(grid)
+        # we assume that grid can contain only integers
         self.__alphabet = set(range(1, self.__N+1))
         
     def is_valid(self):
@@ -69,6 +70,12 @@ class Sudoku(object):
     def check_squares(self):
         """Function to check if squares contain all elements 
         of alphabet and only them"""
+        # since we checked earlier, that rows and columns contain
+        # only characters from the alphabet,
+        # we can check squares by summing them 
+        # and it should be equal to sum(alphabet)
+        # but also we can just check whether the whole
+        # alphabet is in the square
         from math import sqrt
         n = int(sqrt(self.__N))
         for i in range(n):
