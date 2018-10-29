@@ -10,3 +10,6 @@ You can use it absolutely free and modify as you want.
 
 [5 kyu](./solutions/5_kyu/)
 
+[6 kyu](./solutions/6_kyu/)
+
+[7 kyu](./solutions/7_kyu/)
