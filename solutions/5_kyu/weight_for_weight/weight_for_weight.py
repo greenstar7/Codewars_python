@@ -8,6 +8,6 @@ def order_weight(strng):
     # the nums will be already sorted in the result as strings
     strng = sorted(strng.strip().split())
     # sort nums by their wight (sum of digits)
-    res = sorted(strng, key=lambda x: sum((nt(digit) for digit in x)))
+    res = sorted(strng, key=lambda x: sum((int(digit) for digit in x)))
     # returning result as one string
     return ' '.join(res)
