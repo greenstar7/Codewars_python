@@ -1,21 +1,25 @@
 """Hrynevych Artemii
-My solution for 4 kyu '4 by 4 Skyscrapers' kata
-https://www.codewars.com/kata/4-by-4-skyscrapers"""
-
+My solution for 6 by 6 Skyscrapers kata
+https://www.codewars.com/kata/6-by-6-skyscrapers
+"""
+# This solution is too slow, but sometimes passes with 0.7 seconds
+# before timeout xD
 # TODO: try constrain satisfaction
 # -http://norvig.com/sudoku.html
 # -https://en.wikipedia.org/wiki/Constraint_satisfaction
 
 # GRID SIZE
-N = 4
+N = 6
 # dict of {clue: {distance from clue: set(possible values in cell), next distance:...}, nect clue:... }
 # for every clue (1, 2, 3, 4)
 POS = {
-    1: {0: {4}, 1: {1,2,3}, 2: {1,2,3}, 3: {1,2,3}},
-    2: {0: {1,2,3}, 1: {1,2,3,4}, 2: {1,2,3,4}, 3: {1,2,3,4}},
-    3: {0: {1,2}, 1: {1,2,3}, 2: {1,2,3,4}, 3: {1,2,3,4}},
-    4: {0: {1}, 1: {2}, 2: {3}, 3: {4}},
-    0: {0: {1,2,3,4}, 1: {1,2,3,4}, 2: {1,2,3,4}, 3: {1,2,3,4}}
+    1: {0: {6}, 1: {1,2,3,4,5}, 2: {1,2,3,4,5}, 3: {1,2,3,4,5}, 4: {1,2,3,4,5}, 5: {1,2,3,4,5}},
+    2: {0: {1,2,3,4,5}, 1: {1,2,3,4,5,6}, 2: {1,2,3,4,5,6}, 3: {1,2,3,4,5,6}, 4: {1,2,3,4,5,6}, 5: {1,2,3,4,5,6}},
+    3: {0: {1,2,3,4}, 1: {1,2,3,4,5}, 2: {1,2,3,4,5,6}, 3: {1,2,3,4,5,6}, 4: {1,2,3,4,5,6}, 5: {1,2,3,4,5,6}},
+    4: {0: {1,2,3}, 1: {1,2,3,4}, 2: {1,2,3,4,5}, 3: {1,2,3,4,5,6}, 4: {1,2,3,4,5,6}, 5: {1,2,3,4,5,6}},
+    5: {0: {1,2}, 1: {1,2,3}, 2: {1,2,3,4}, 3: {1,2,3,4,5}, 4: {1,2,3,4,5,6}, 5: {1,2,3,4,5,6}},
+    6: {0: {1}, 1: {2}, 2: {3}, 3: {4}, 4: {5}, 5: {6}},
+    0: {0: {1,2,3,4,5,6}, 1: {1,2,3,4,5,6}, 2: {1,2,3,4,5,6}, 3: {1,2,3,4,5,6}, 4: {1,2,3,4,5,6}, 5: {1,2,3,4,5,6}}
 }
 
 GRID = [[set(range(1,N+1)) for i in range(N)] for j in range(N)]
