@@ -4,9 +4,6 @@ https://www.codewars.com/kata/6-by-6-skyscrapers
 """
 # This solution is too slow, but sometimes passes with 0.7 seconds
 # before timeout xD
-# TODO: try constrain satisfaction
-# -http://norvig.com/sudoku.html
-# -https://en.wikipedia.org/wiki/Constraint_satisfaction
 
 # GRID SIZE
 N = 6
