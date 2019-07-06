@@ -81,7 +81,6 @@ class Expression:
         return self._expr()
 
     def _expr(self) -> int:
-        print('\texpr')
         ret_val = self._term()
         while True:
             self._get_next_token()
@@ -99,7 +98,6 @@ class Expression:
         return ret_val
 
     def _term(self) -> int:
-        print('\tterm')
         ret_val = self._factor()
         while True:
             self._get_next_token()
@@ -117,15 +115,12 @@ class Expression:
         return ret_val
 
     def _factor(self) -> int:
-        print('\tfactor')
         self._get_next_token()
         if self.curr_token.ttype == TokenType.plus:
             return self._factor()
         elif self.curr_token.ttype == TokenType.minus:
-            print('\tunary minus')
             return - self._factor()
         elif self.curr_token.ttype == TokenType.number:
-            print('\number')
             return int(self.curr_token.tvalue)
         elif self.curr_token.ttype == TokenType.lpar:
             expr_res = self._expr()
@@ -145,7 +140,6 @@ class Expression:
                 self.curr_token = self.tokenizer.get_next_token()
             except StopIteration:
                 self.curr_token = None
-        print('TOKEN:', self.curr_token)
 
 
 def calc(expression_str: str) -> int:
